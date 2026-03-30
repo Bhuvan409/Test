@@ -1,1 +1,25 @@
+# .github/workflows/pr-checks.yml
+name: PR Initial Checks
 
+on:
+  pull_request:
+    types: [opened, synchronize]
+
+jobs:
+  lint-and-syntax:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v3
+      
+      - name: Syntax Check
+        run: # your syntax check command
+        
+      - name: Linting
+        run: # your linting command
+        
+      - name: Trigger Jenkins Build
+        if: success()
+        run: |
+          curl -X POST \
+            -H "Authorization: Bearer ${{ secrets.JENKINS_API_TOKEN }}" \
+            "${{ secrets.JENKINS_URL }}/job/YourPipelineName/buildWithParameters?PR_NUMBER=${{ github.event.pull_request.number }}&COMMIT_SHA=${{ github.event.pull_request.head.sha }}&REPO=${{ github.repository }}"
